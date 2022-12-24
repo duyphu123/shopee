@@ -19,7 +19,6 @@ interface Props {
   categories: Category[]
 }
 
-
 type FormData = NoUndefinedField<Pick<Schema, 'price_max' | 'price_min'>>
 const priceSchema = schema.pick(['price_min', 'price_max'])
 export default function AsideFilter({ queryConfig, categories }: Props) {
@@ -27,16 +26,15 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
     control,
     handleSubmit,
     trigger,
-   
+    reset,
     formState: { errors }
   } = useForm<FormData>({
-    defaultValues: { 
+    defaultValues: {
       price_min: '',
       price_max: ''
     },
     resolver: yupResolver(priceSchema)
   })
-
 
   const navigate = useNavigate()
   const onSubmit = handleSubmit((data) => {
@@ -51,6 +49,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
   })
   const { category } = queryConfig
   const handleRemoveAll = () => {
+    reset()
     navigate({
       pathname: path.home,
       search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category'])).toString()
@@ -58,7 +57,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
   }
   return (
     <div className='py-4'>
-         <Link
+      <Link
         to={path.home}
         className={classNames('flex items-center font-bold', {
           'text-orange': !category
@@ -133,7 +132,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
         <div>Khoảng Giá</div>
         <form className='mt-2' onSubmit={onSubmit}>
           <div className='flex items-start'>
-          <Controller
+            <Controller
               control={control}
               name='price_min'
               render={({ field }) => {
@@ -175,7 +174,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
               }}
             />
           </div>
-          <div className='mt-1 min-h-[1.25rem] text-center text-sm text-red-600'>{errors.price_min?.message}</div>  
+          <div className='mt-1 min-h-[1.25rem] text-center text-sm text-red-600'>{errors.price_min?.message}</div>
           <Button className='flex w-full items-center justify-center bg-orange p-2 text-sm uppercase text-white hover:bg-orange/80'>
             Áp dụng
           </Button>
@@ -183,7 +182,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
       </div>
       <div className='my-4 h-[1px] bg-gray-300' />
       <div className='text-sm'>Đánh giá</div>
-      <RatingStars queryConfig={queryConfig}/>
+      <RatingStars queryConfig={queryConfig} />
       <div className='my-4 h-[1px] bg-gray-300' />
       <Button
         onClick={handleRemoveAll}

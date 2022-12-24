@@ -1,13 +1,28 @@
 import { useMutation } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, createSearchParams } from 'react-router-dom'
 import Popover from '../Popover'
 import authApi from 'src/apis/auth.api'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
+import { useForm } from 'react-hook-form'
 import path from 'src/constants/path'
+import useQueryConfig from 'src/hooks/useQueryConfig'
+import { Schema, schema } from 'src/utils/rules'
+import { yupResolver } from '@hookform/resolvers/yup'
+import omit from 'lodash/omit'
 
+type FormData = Pick<Schema, 'name'>
+const nameSchema = schema.pick(['name'])
 export default function Header() {
-  const { setIsAuthenticated, isAuthenticated , setProfile, profile} = useContext(AppContext)
+  const queryConfig = useQueryConfig()
+  const { register, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      name: ''
+    },
+    resolver: yupResolver(nameSchema)
+  })
+  const navigate = useNavigate()
+  const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
 
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
@@ -19,6 +34,24 @@ export default function Header() {
   const handleLogout = () => {
     logoutMutation.mutate()
   }
+  const onSubmitSearch = handleSubmit((data) => {
+    const config = queryConfig.order
+      ? omit(
+          {
+            ...queryConfig,
+            name: data.name
+          },
+          ['order', 'sort_by']
+        )
+      : {
+          ...queryConfig,
+          name: data.name
+        }
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(config).toString()
+    })
+  })
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
@@ -97,7 +130,7 @@ export default function Header() {
               <Link to={path.register} className='mx-3 capitalize hover:text-white/70'>
                 Đăng ký
               </Link>
-              <div className='border-r-[1px] border-r--white/40 h-4' />
+              <div className='border-r--white/40 h-4 border-r-[1px]' />
               <Link to={path.login} className='mx-3 capitalize hover:text-white/70'>
                 Đăng nhập
               </Link>
@@ -112,12 +145,13 @@ export default function Header() {
               </g>
             </svg>
           </Link>
-          <form className='col-span-9'>
+          <form className='col-span-9' onSubmit={onSubmitSearch}>
             <div className='flex rounded-sm bg-white p-1'>
               <input
                 type='text'
                 className='flex-grow border-none bg-transparent px-3 py-2 text-black outline-none'
                 placeholder='Free Ship Đơn Từ 0Đ'
+                {...register('name')}
               />
               <button className='flex-shrink-0 rounded-sm bg-orange py-2 px-6 hover:opacity-90'>
                 <svg
@@ -149,7 +183,7 @@ export default function Header() {
                           <img
                             src='https://sixdo.vn/images/products/2022/large/SBT_6988.jpg'
                             alt='anh'
-                            className='w-11 h-11 object-cover'
+                            className='h-11 w-11 object-cover'
                           />
                         </div>
                         <div className='ml-2 flex-grow overflow-hidden'>
@@ -164,7 +198,7 @@ export default function Header() {
                           <img
                             src='https://sixdo.vn/images/products/2022/large/SBT_6988.jpg'
                             alt='anh'
-                            className='w-11 h-11 object-cover'
+                            className='h-11 w-11 object-cover'
                           />
                         </div>
                         <div className='ml-2 flex-grow overflow-hidden'>
@@ -179,7 +213,7 @@ export default function Header() {
                           <img
                             src='https://sixdo.vn/images/products/2022/large/SBT_6988.jpg'
                             alt='anh'
-                            className='w-11 h-11 object-cover'
+                            className='h-11 w-11 object-cover'
                           />
                         </div>
                         <div className='ml-2 flex-grow overflow-hidden'>
@@ -194,7 +228,7 @@ export default function Header() {
                           <img
                             src='https://sixdo.vn/images/products/2022/large/SBT_6988.jpg'
                             alt='anh'
-                            className='w-11 h-11 object-cover'
+                            className='h-11 w-11 object-cover'
                           />
                         </div>
                         <div className='ml-2 flex-grow overflow-hidden'>
@@ -209,7 +243,7 @@ export default function Header() {
                           <img
                             src='https://sixdo.vn/images/products/2022/large/SBT_6988.jpg'
                             alt='anh'
-                            className='w-11 h-11 object-cover'
+                            className='h-11 w-11 object-cover'
                           />
                         </div>
                         <div className='ml-2 flex-grow overflow-hidden'>

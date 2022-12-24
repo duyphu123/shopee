@@ -8,6 +8,7 @@ import MainLayout from './layouts/MainLayout'
 import Profile from './pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from './contexts/app.context'
+import ProductDetail from './pages/ProductDetail'
 
 
 
@@ -28,6 +29,15 @@ export default function useRouteElements() {
       element: (
         <MainLayout>
           <ProducList />
+        </MainLayout>
+      )
+    },
+    {
+      path: path.productDetail,
+      index:true,
+      element: (
+        <MainLayout>
+          <ProductDetail />
         </MainLayout>
       )
     },
