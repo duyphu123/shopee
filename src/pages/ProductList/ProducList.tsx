@@ -16,7 +16,8 @@ export default function ProducList() {
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
     },
-    keepPreviousData: true
+    keepPreviousData: true,
+    staleTime: 3 * 60 * 1000
   })
   const { data: categoriesData } = useQuery({
     queryKey: ['categories'],
