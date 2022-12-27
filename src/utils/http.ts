@@ -34,7 +34,7 @@ class Http {
       (response) => {
         const { url } = response.config
         if (url === path.login || url === path.register) {
-          const data =response.data as AuthResponse
+          const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           setAccessTokenToLS(this.accessToken)
           setProfileToLS(data.data.user)
@@ -49,6 +49,9 @@ class Http {
           const data: any | undefined = error.response?.data
           const message = data.message || error.message
           toast.error(message)
+        }
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          clearLS()
         }
         return Promise.reject(error)
       }
