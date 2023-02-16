@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import productApi from 'src/apis/product.api'
 import ProductRating from 'src/components/ProductRating'
@@ -191,7 +191,7 @@ export default function ProductDetail() {
               <div className='mt-8 flex items-center'>
                 <div className='flex items-center'>
                   <span className='mr-1 border-b border-b-orange text-orange'>{product.rating}</span>
-                  <ProductRating 
+                  <ProductRating
                     rating={product.rating}
                     activeClassname='fill-orange text-orange h-4 w-4'
                     nonActiveClassname='fill-gray-300 text-gray-300 h-4 w-4'

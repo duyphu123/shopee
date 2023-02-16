@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { queryClient } from 'src/main'
 import { Link, useNavigate, createSearchParams } from 'react-router-dom'
 import Popover from '../Popover'
 import authApi from 'src/apis/auth.api'
@@ -39,6 +39,7 @@ export default function Header() {
     onSuccess: () => {
       setIsAuthenticated(false)
       setProfile(null)
+      queryClient.removeQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
     }
   })
   const handleLogout = () => {
